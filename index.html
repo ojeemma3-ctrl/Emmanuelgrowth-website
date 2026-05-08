@@ -1613,6 +1613,38 @@
     .footer-bottom { flex-direction: column; gap: 0.8rem; text-align: center; }
     .cta-reassurance { flex-direction: column; align-items: center; gap: 0.7rem; }
     .reassure-item + .reassure-item { border-left: none; padding-left: 0; }
+
+    /* FIX 1 — Hide redundant close button */
+    #mobileClose { display: none !important; }
+
+    /* FIX 2 — Outcome line not italic */
+    .hero-outcome {
+      font-style: normal !important;
+      font-weight: 400 !important;
+      font-size: 0.92rem !important;
+    }
+
+    /* FIX 3 — WhatsApp button position */
+    .whatsapp-float {
+      bottom: 1rem !important;
+      right: 0.8rem !important;
+      width: 46px !important;
+      height: 46px !important;
+    }
+    .hero-bullets { padding-right: 4rem !important; }
+
+    /* FIX 4 — Eyebrow label on mobile */
+    .hero-eyebrow {
+      font-size: 0.56rem !important;
+      padding: 0.28rem 0.65rem !important;
+      letter-spacing: 0.08em !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 90vw !important;
+      width: auto !important;
+      display: inline-flex !important;
+    }
   }
 </style>
 </head>
