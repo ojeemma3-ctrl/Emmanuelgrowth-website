@@ -1614,9 +1614,6 @@
     .cta-reassurance { flex-direction: column; align-items: center; gap: 0.7rem; }
     .reassure-item + .reassure-item { border-left: none; padding-left: 0; }
 
-    /* FIX 1 — Hide redundant close button */
-    #mobileClose { display: none !important; }
-
     /* FIX 2 — Outcome line not italic */
     .hero-outcome {
       font-style: normal !important;
@@ -1676,7 +1673,12 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-close" id="mobileClose">✕</button>
+  <button
+    id="mobileClose"
+    class="mobile-close"
+    type="button"
+    aria-label="Close menu"
+    style="position:absolute;top:1.2rem;right:1.5rem;font-size:1.8rem;color:#8a9680;background:none;border:none;cursor:pointer;padding:0.5rem;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;z-index:1001;">✕</button>
   <a href="#services" class="mobile-link">Services</a>
   <a href="#how" class="mobile-link">How It Works</a>
   <a href="#faq" class="mobile-link">FAQ</a>
@@ -2216,29 +2218,40 @@
   });
 
   // HAMBURGER & MOBILE MENU
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const mobileClose = document.getElementById('mobileClose');
-  const body = document.body;
+  document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileClose');
 
-  function openMenu() {
-    mobileMenu.classList.add('open');
-    body.style.overflow = 'hidden';
-    hamburger.classList.add('active');
-  }
-  function closeMenu() {
-    mobileMenu.classList.remove('open');
-    body.style.overflow = '';
-    hamburger.classList.remove('active');
-  }
+    function openMenu() {
+      mobileMenu.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      hamburger.classList.add('active');
+    }
+    function closeMenu() {
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+      hamburger.classList.remove('active');
+    }
 
-  hamburger.addEventListener('click', openMenu);
-  mobileClose.addEventListener('click', closeMenu);
-  document.querySelectorAll('.mobile-link').forEach(link => {
-    link.addEventListener('click', closeMenu);
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeMenu();
+    if (hamburger) {
+      hamburger.addEventListener('click', openMenu);
+    }
+    if (mobileClose) {
+      mobileClose.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMenu();
+      });
+    }
+    document.querySelectorAll('.mobile-link').forEach(function(link) {
+      link.addEventListener('click', function() {
+        closeMenu();
+      });
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeMenu();
+    });
   });
 
   // SCROLL ANIMATIONS
