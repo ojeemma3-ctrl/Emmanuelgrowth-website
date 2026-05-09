@@ -195,8 +195,13 @@
   .mobile-menu {
     display: none;
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(8,12,7,0.98);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(8,12,7,0.97);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     z-index: 999;
@@ -204,27 +209,24 @@
     align-items: center;
     justify-content: center;
     gap: 0;
+    overflow: hidden;
   }
   .mobile-menu.open { display: flex; }
-  .mobile-menu a.mobile-link {
-    font-family: 'Cormorant Garant', serif;
+  .mobile-menu .mobile-link {
+    font-family: 'Cormorant Garant', Georgia, serif;
     font-size: 2rem;
     color: #f0f0eb;
     text-decoration: none;
-    letter-spacing: 0.04em;
-    display: block;
+    padding: 1rem 2rem;
     text-align: center;
-    padding: 0.8rem 2rem;
+    display: block;
     width: 100%;
     border-bottom: 1px solid rgba(125,196,41,0.08);
     transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .mobile-menu a.mobile-link:hover { color: #7DC429; }
-  .mobile-menu a.mobile-link:last-child {
-    color: #7DC429;
-    font-weight: 700;
-    border-bottom: none;
-  }
+  .mobile-menu .mobile-link:last-child { border-bottom: none; }
+  .mobile-menu .mobile-link:active { color: #7DC429; }
   .mobile-close {
     position: absolute;
     top: 1.5rem;
@@ -1675,15 +1677,14 @@
 <div class="mobile-menu" id="mobileMenu">
   <button
     id="mobileClose"
-    class="mobile-close"
     type="button"
     aria-label="Close menu"
-    style="position:absolute;top:1.2rem;right:1.5rem;font-size:1.8rem;color:#8a9680;background:none;border:none;cursor:pointer;padding:0.5rem;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;z-index:1001;">✕</button>
+    style="position:absolute;top:1.2rem;right:1.5rem;font-size:2rem;color:#8a9680;background:none;border:none;cursor:pointer;padding:0.8rem;min-width:48px;min-height:48px;display:flex;align-items:center;justify-content:center;z-index:1002;line-height:1;">✕</button>
   <a href="#services" class="mobile-link">Services</a>
   <a href="#how" class="mobile-link">How It Works</a>
   <a href="#faq" class="mobile-link">FAQ</a>
   <a href="#about" class="mobile-link">About</a>
-  <a href="#contact-form" class="mobile-link">Free Report</a>
+  <a href="#contact-form" class="mobile-link" style="color:#7DC429;font-weight:700;">Free Report</a>
 </div>
 
 <!-- SECTION 1: HERO -->
@@ -2211,32 +2212,40 @@
     });
   });
 
-  // NAV SCROLL
-  const nav = document.getElementById('mainNav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
-  });
-
-  // HAMBURGER & MOBILE MENU
+  // NAV & MOBILE MENU
   document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileClose = document.getElementById('mobileClose');
+
+    var hamburger = document.getElementById('hamburger');
+    var mobileMenu = document.getElementById('mobileMenu');
+    var mobileClose = document.getElementById('mobileClose');
+    var navLogo = document.querySelector('.nav-logo');
+    var nav = document.getElementById('mainNav');
 
     function openMenu() {
-      mobileMenu.classList.add('open');
-      document.body.style.overflow = 'hidden';
-      hamburger.classList.add('active');
+      if (mobileMenu) {
+        mobileMenu.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+      }
     }
+
     function closeMenu() {
-      mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-      hamburger.classList.remove('active');
+      if (mobileMenu) {
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+      }
     }
 
     if (hamburger) {
-      hamburger.addEventListener('click', openMenu);
+      hamburger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openMenu();
+      });
     }
+
     if (mobileClose) {
       mobileClose.addEventListener('click', function(e) {
         e.preventDefault();
@@ -2244,14 +2253,36 @@
         closeMenu();
       });
     }
-    document.querySelectorAll('.mobile-link').forEach(function(link) {
-      link.addEventListener('click', function() {
+
+    if (navLogo) {
+      navLogo.addEventListener('click', function() {
+        closeMenu();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    var mobileLinks = document.querySelectorAll('.mobile-link');
+    mobileLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.stopPropagation();
         closeMenu();
       });
     });
+
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeMenu();
     });
+
+    window.addEventListener('scroll', function() {
+      if (nav) {
+        if (window.scrollY > 40) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      }
+    });
+
   });
 
   // SCROLL ANIMATIONS
